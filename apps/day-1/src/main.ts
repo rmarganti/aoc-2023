@@ -12,7 +12,7 @@ const program = Effect.gen(function* (_) {
     const filePath = path.resolve(process.cwd(), "input.txt");
     const fileContents = yield* _(fileSystem.readFileString(filePath));
 
-    return yield* _(
+    const total = yield* _(
         fileContents,
         String.split("\n"),
         ReadonlyArray.filter((line) => line !== ""),
@@ -20,12 +20,9 @@ const program = Effect.gen(function* (_) {
         Effect.all,
         Effect.map(Number.sumAll),
     );
-}).pipe(
-    Effect.matchEffect({
-        onSuccess: (total) => Console.log(`Total: ${total}`),
-        onFailure: (cause) => Console.error(`Error: ${cause.message}`),
-    }),
-);
+
+    yield* _(Console.log(`Total: ${total}`));
+}).pipe(Effect.catchAll((e) => Console.error(`Error: ${e.message}`)));
 
 const programLayer = Layer.merge(NodeFileSystem.layer, NodePath.layer);
 const runnable = Effect.provide(program, programLayer);
