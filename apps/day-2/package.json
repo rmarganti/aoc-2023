@@ -1,5 +1,5 @@
 {
-    "name": "day-1",
+    "name": "day-2",
     "version": "1.0.0",
     "description": "",
     "type": "module",
@@ -7,7 +7,8 @@
     "scripts": {
         "dev": "tsx watch src/main.ts",
         "build": "tsc",
-        "start": "node dist/main.js"
+        "start": "node dist/main.js",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./src/**/*.spec.ts"
     },
     "keywords": [],
     "author": "Ryan Marganti",

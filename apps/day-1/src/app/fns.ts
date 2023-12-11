@@ -1,7 +1,7 @@
 import { Effect, pipe } from "effect";
 
 export class FindNumberError {
-    readonly _tag = "NumberLikeError";
+    readonly _tag = "FindNumberError";
     constructor(readonly message: string) {}
 }
 
