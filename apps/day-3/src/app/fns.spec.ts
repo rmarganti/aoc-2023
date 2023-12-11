@@ -18,9 +18,7 @@ test("findAndSumPartNumbers()", () => {
     expect(result).toEqual(4361);
 });
 
-test("sumPowersOfMinimalStones", () => {
-    const program = sumPowersOfMinimalStones(input);
-    const result = Effect.runSync(program);
-
-    expect(result).toEqual(2286);
+test("findAndSumGearNumbers", () => {
+    const result = findAndSumGearRatios(input);
+    expect(result).toEqual(467835);
 });

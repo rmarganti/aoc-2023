@@ -1,17 +1,26 @@
 import * as NodeFileSystem from "@effect/platform-node/FileSystem";
 import * as NodePath from "@effect/platform-node/Path";
 import { Effect, Layer, pipe } from "effect";
-import { findAndSumPartNumbers } from "./app/fns.js";
+import { findAndSumGearRatios, findAndSumPartNumbers } from "./app/fns.js";
 import { readInput } from "@repo/shared-utils";
 
 const day1program = (input: string) =>
     pipe(input, findAndSumPartNumbers, (result) =>
-        Effect.logInfo(`Day 1 Total: ${result}`),
+        Effect.logInfo(`Part 1 Total: ${result}`),
+    );
+
+const day2program = (input: string) =>
+    pipe(input, findAndSumGearRatios, (result) =>
+        Effect.logInfo(`Part 2 Total: ${result}`),
     );
 
 const combinedProgram = pipe(
     readInput(),
-    Effect.flatMap(day1program),
+    Effect.flatMap((input) =>
+        Effect.all([day1program(input), day2program(input)], {
+            concurrency: "unbounded",
+        }),
+    ),
     Effect.catchAll((e) => Effect.logError(e.message)),
 );
 
