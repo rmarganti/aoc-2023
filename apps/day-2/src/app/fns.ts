@@ -2,7 +2,7 @@ import { readInput } from "@repo/shared-utils";
 import { Effect, Number, ReadonlyArray, String, pipe } from "effect";
 
 // ------------------------------------------------
-// Day 1
+// Part 1
 // ------------------------------------------------
 
 /**
@@ -20,7 +20,7 @@ const totalGameIds = (games: GameData[]) => {
 };
 
 // ------------------------------------------------
-// Day 2
+// Part 2
 // ------------------------------------------------
 
 export const sumPowersOfMinimalStones = (gameData: GameData[]) =>

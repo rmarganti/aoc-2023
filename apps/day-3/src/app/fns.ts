@@ -1,7 +1,7 @@
 import { Number, ReadonlyArray, String, pipe } from "effect";
 
 // ------------------------------------------------
-// Day 1
+// Part 1
 // ------------------------------------------------
 
 /**
@@ -14,14 +14,6 @@ export const findAndSumPartNumbers = (input: string) =>
         findValidPartNumbers,
         ReadonlyArray.map((partNumber) => partNumber.number),
         Number.sumAll,
-    );
-
-const readLines = (input: string): string[] =>
-    pipe(
-        input,
-        String.split("\n"),
-        ReadonlyArray.map((line) => line.trim()),
-        ReadonlyArray.filter((line) => line !== ""),
     );
 
 const PART_NUMBER_REGEX = /\d+/g;
@@ -75,7 +67,7 @@ const isSymbol = (char: string | undefined) => {
 };
 
 // ------------------------------------------------
-// Day 2
+// Part 2
 // ------------------------------------------------
 
 export const findAndSumGearRatios = (input: string) =>
@@ -151,6 +143,14 @@ const findAdjacentPartNumbers = (partNumbers: PartNumber[], gear: Gear) =>
 // ------------------------------------------------
 // Shared
 // ------------------------------------------------
+
+const readLines = (input: string): string[] =>
+    pipe(
+        input,
+        String.split("\n"),
+        ReadonlyArray.map((line) => line.trim()),
+        ReadonlyArray.filter((line) => line !== ""),
+    );
 
 const findAllPartNumbers = (lines: string[]) =>
     lines.reduce<PartNumber[]>((carrier, line, lineIdx) => {
