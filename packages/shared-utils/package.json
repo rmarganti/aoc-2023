@@ -1,0 +1,17 @@
+{
+    "name": "@repo/shared-utils",
+    "main": "src/index.ts",
+    "types": "src/index.ts",
+    "type": "module",
+    "dependencies": {
+        "@effect/platform": "^0.32.2",
+        "@effect/platform-node": "^0.33.5",
+        "effect": "2.0.0-next.58"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/node": "^20.5.2",
+        "typescript": "^5.2.2"
+    }
+}

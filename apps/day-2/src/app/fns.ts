@@ -1,5 +1,4 @@
-import { FileSystem } from "@effect/platform/FileSystem";
-import { Path } from "@effect/platform/Path";
+import { readInput } from "@repo/shared-utils";
 import { Effect, Number, ReadonlyArray, String, pipe } from "effect";
 
 // ------------------------------------------------
@@ -67,21 +66,7 @@ interface HandfulContents {
 export const readInputAndParse = () =>
     pipe(readInput(), Effect.flatMap(parseFileContents));
 
-/**
- * Read the input.txt in the current working directory.
- */
-const readInput = () =>
-    pipe(
-        Effect.all([FileSystem, Path]),
-        Effect.flatMap(([fileSystem, path]) =>
-            pipe(
-                path.resolve(process.cwd(), "input.txt"),
-                fileSystem.readFileString,
-            ),
-        ),
-    );
-
-const parseFileContents = (fileContents: string) =>
+export const parseFileContents = (fileContents: string) =>
     pipe(
         // Split the file into lines
         fileContents,

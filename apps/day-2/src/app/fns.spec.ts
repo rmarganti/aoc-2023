@@ -1,5 +1,6 @@
 import { Effect } from "effect";
 import {
+    parseFileContents,
     sumPowersOfMinimalStones,
     sumValidGameIdsFromGameRecord,
 } from "./fns.js";
@@ -18,16 +19,14 @@ const input = `
     Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 `;
 
-test("sumValidGameIdsFromGameRecord()", () => {
-    const program = sumValidGameIdsFromGameRecord(availableStones)(input);
-    const result = Effect.runSync(program);
+const parsedInput = Effect.runSync(parseFileContents(input));
 
+test("sumValidGameIdsFromGameRecord()", () => {
+    const result = sumValidGameIdsFromGameRecord(availableStones)(parsedInput);
     expect(result).toEqual(8);
 });
 
 test("sumPowersOfMinimalStones", () => {
-    const program = sumPowersOfMinimalStones(input);
-    const result = Effect.runSync(program);
-
+    const result = sumPowersOfMinimalStones(parsedInput);
     expect(result).toEqual(2286);
 });
