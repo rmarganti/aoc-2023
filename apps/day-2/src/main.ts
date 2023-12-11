@@ -28,7 +28,7 @@ const combinedProgram = pipe(
     readInputAndParse(),
     Effect.flatMap((gameData) =>
         Effect.all([day1program(gameData), day2program(gameData)], {
-            concurrency: 'unbounded',
+            concurrency: "unbounded",
         }),
     ),
     Effect.catchAll((e) => Effect.logError(e.message)),
