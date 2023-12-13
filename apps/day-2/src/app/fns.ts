@@ -1,4 +1,4 @@
-import { readInput } from "@repo/shared-utils";
+import { ParseError, readInput } from "@repo/shared-utils";
 import { Effect, Number, ReadonlyArray, String, pipe } from "effect";
 
 // ------------------------------------------------
@@ -172,8 +172,3 @@ const isValidGame = (availableStones: HandfulContents) => (game: GameData) =>
             h.green <= availableStones.green &&
             h.blue <= availableStones.blue,
     );
-
-export class ParseError {
-    readonly _tag = "ParseError";
-    constructor(readonly message: string) {}
-}
