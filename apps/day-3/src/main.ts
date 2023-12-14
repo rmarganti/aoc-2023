@@ -5,13 +5,19 @@ import { findAndSumGearRatios, findAndSumPartNumbers } from "./app/fns.js";
 import { readInput } from "@repo/shared-utils";
 
 const day1program = (input: string) =>
-    pipe(input, findAndSumPartNumbers, (result) =>
-        Effect.logInfo(`Part 1 Total: ${result}`),
+    pipe(
+        input,
+        findAndSumPartNumbers,
+        (result) => Effect.logInfo(`Part 1 Total: ${result}`),
+        Effect.withLogSpan("part 1"),
     );
 
 const day2program = (input: string) =>
-    pipe(input, findAndSumGearRatios, (result) =>
-        Effect.logInfo(`Part 2 Total: ${result}`),
+    pipe(
+        input,
+        findAndSumGearRatios,
+        (result) => Effect.logInfo(`Part 2 Total: ${result}`),
+        Effect.withLogSpan("part 2"),
     );
 
 const combinedProgram = pipe(

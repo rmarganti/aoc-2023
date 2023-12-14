@@ -15,13 +15,19 @@ const AVAILABLE_STONES = {
 };
 
 const day1program = (gameData: GameData[]) =>
-    pipe(gameData, sumValidGameIdsFromGameRecord(AVAILABLE_STONES), (result) =>
-        Effect.logInfo(`Day 1 Total: ${result}`),
+    pipe(
+        gameData,
+        sumValidGameIdsFromGameRecord(AVAILABLE_STONES),
+        (result) => Effect.logInfo(`Day 1 Total: ${result}`),
+        Effect.withLogSpan("part 1"),
     );
 
 const day2program = (gameData: GameData[]) =>
-    pipe(gameData, sumPowersOfMinimalStones, (result) =>
-        Effect.logInfo(`Day 2 Total: ${result}`),
+    pipe(
+        gameData,
+        sumPowersOfMinimalStones,
+        (result) => Effect.logInfo(`Day 2 Total: ${result}`),
+        Effect.withLogSpan("part 2"),
     );
 
 const combinedProgram = pipe(

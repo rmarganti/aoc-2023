@@ -9,6 +9,7 @@ const day1program = (input: string) =>
         input,
         parseAndSumCardPoints,
         Effect.tap((result) => Effect.logInfo(`Part 1 Total: ${result}`)),
+        Effect.withLogSpan("part 1"),
     );
 
 const day2program = (input: string) =>
@@ -16,6 +17,7 @@ const day2program = (input: string) =>
         input,
         parseAndCountCards,
         Effect.tap((result) => Effect.logInfo(`Part 2 Count: ${result}`)),
+        Effect.withLogSpan("part 2"),
     );
 
 const combinedProgram = pipe(
