@@ -47,15 +47,12 @@ const makeCopies = (cards: CardWithPoints[]): CardWithPoints[] => {
             break;
         }
 
-        // See how many winning matches this card has
-        const matchCount = countMatches(card);
-
-        if (matchCount === 0) {
+        if (card.matchCount === 0) {
             continue;
         }
 
         // For every X matches, make copies of the next X cards.
-        const matches = cards.slice(card.id, card.id + matchCount);
+        const matches = cards.slice(card.id, card.id + card.matchCount);
         cardsToCheck.push(...matches);
     }
 
@@ -73,6 +70,7 @@ interface Card {
 }
 
 interface CardWithPoints extends Card {
+    matchCount: number;
     points: number;
 }
 
@@ -107,7 +105,7 @@ const parseCard = (line: string) =>
         })),
 
         //Add the point totals
-        Effect.map(addPointTotals),
+        Effect.map(addMatchCountAndPointTotals),
     );
 
 const parseCardId = (id?: string) =>
@@ -165,18 +163,19 @@ const safeParseInt = (input: string) =>
     });
 
 /**
- * Determine which scratched numbers match the winning numbers and determine the card's value.
+ * Determine which scratched numbers match the winning numbers and determine
+ * the card's value.
  */
-const addPointTotals = (card: Card): CardWithPoints =>
+const addMatchCountAndPointTotals = (card: Card): CardWithPoints =>
     pipe(
         // Determine which numbers match
         countMatches(card),
 
-        // Find the point value
-        (matchLength) => (matchLength > 0 ? 2 ** (matchLength - 1) : 0),
-
-        // Add it to the Card
-        (points) => ({ ...card, points }),
+        (matchCount) => ({
+            ...card,
+            matchCount,
+            points: matchCount > 0 ? 2 ** (matchCount - 1) : 0,
+        }),
     );
 
 /**
