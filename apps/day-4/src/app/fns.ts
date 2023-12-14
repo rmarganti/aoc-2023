@@ -22,30 +22,45 @@ export const parseAndSumCardPoints = (input: string) =>
 export const parseAndCountCards = (input: string) =>
     pipe(
         parseCards(input),
-        Effect.map((cards) =>
-            ReadonlyArray.flatMap(cards, (card) => makeCopies(card, cards)),
-        ),
+        Effect.map(makeCopies),
         Effect.map(ReadonlyArray.length),
     );
 
-const makeCopies = (
-    card: CardWithPoints,
-    cards: ReadonlyArray<CardWithPoints>,
-): CardWithPoints[] =>
-    pipe(
-        {
-            cardIndex: findCardIndex(card, cards),
-            matchCount: countMatches(card),
-        },
-        ({ cardIndex, matchCount }) =>
-            cards.slice(cardIndex + 1, cardIndex + 1 + matchCount),
-        (matches) =>
-            ReadonlyArray.flatMap(matches, (card) => makeCopies(card, cards)),
-        (recursiveMatches) => [card, ...recursiveMatches],
-    );
+/**
+ * For every card that has a winning match, make copies of the next X cards.
+ * Then recursively do the same for the copies. where X is the number of matches.
+ */
+const makeCopies = (cards: CardWithPoints[]): CardWithPoints[] => {
+    // Start with the original cards
+    const cardsToCheck = [...cards];
 
-const findCardIndex = (card: Card, cards: ReadonlyArray<Card>): number =>
-    cards.findIndex((c) => c.id === card.id);
+    let checkIdx = -1;
+
+    while (1) {
+        checkIdx += 1;
+
+        // Attempt to get the next card to check
+        const card = cardsToCheck[checkIdx];
+
+        // We've checked all cards
+        if (card === undefined) {
+            break;
+        }
+
+        // See how many winning matches this card has
+        const matchCount = countMatches(card);
+
+        if (matchCount === 0) {
+            continue;
+        }
+
+        // For every X matches, make copies of the next X cards.
+        const matches = cards.slice(card.id, card.id + matchCount);
+        cardsToCheck.push(...matches);
+    }
+
+    return cardsToCheck;
+};
 
 // ------------------------------------------------
 // Shared
