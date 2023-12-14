@@ -1,8 +1,8 @@
 import * as NodeFileSystem from "@effect/platform-node/FileSystem";
 import * as NodePath from "@effect/platform-node/Path";
-import { Effect, Layer, pipe } from "effect";
-import { parseAndSumCardPoints } from "./app/fns.js";
 import { readInput } from "@repo/shared-utils";
+import { Effect, Layer, pipe } from "effect";
+import { parseAndCountCards, parseAndSumCardPoints } from "./app/fns.js";
 
 const day1program = (input: string) =>
     pipe(
@@ -11,15 +11,17 @@ const day1program = (input: string) =>
         Effect.tap((result) => Effect.logInfo(`Part 1 Total: ${result}`)),
     );
 
-// const day2program = (input: string) =>
-//     pipe(input, findAndSumGearRatios, (result) =>
-//         Effect.logInfo(`Part 2 Total: ${result}`),
-//     );
+const day2program = (input: string) =>
+    pipe(
+        input,
+        parseAndCountCards,
+        Effect.tap((result) => Effect.logInfo(`Part 2 Count: ${result}`)),
+    );
 
 const combinedProgram = pipe(
     readInput(),
     Effect.flatMap((input) =>
-        Effect.all([day1program(input)], {
+        Effect.all([day1program(input), day2program(input)], {
             concurrency: "unbounded",
         }),
     ),

@@ -1,5 +1,5 @@
 import { Effect } from "effect";
-import { parseAndSumCardPoints } from "./fns.js";
+import { parseAndCountCards, parseAndSumCardPoints } from "./fns.js";
 
 const input = `
     Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
@@ -14,3 +14,8 @@ test("parseAndSumCardPoints()", () => {
     const result = Effect.runSync(parseAndSumCardPoints(input));
     expect(result).toEqual(13);
 });
+
+test('parseAndCountCards()', () => {
+    const result = Effect.runSync(parseAndCountCards(input));
+    expect(result).toEqual(30);
+})

@@ -10,13 +10,42 @@ import { Effect, Number, ReadonlyArray, pipe } from "effect";
  */
 export const parseAndSumCardPoints = (input: string) =>
     pipe(
-        input,
-        inputToLines,
-        ReadonlyArray.map(parseCard),
-        Effect.all,
+        parseCards(input),
         Effect.map(ReadonlyArray.map((card) => card.points)),
         Effect.map(Number.sumAll),
     );
+
+// ------------------------------------------------
+// Part 2
+// ------------------------------------------------
+
+export const parseAndCountCards = (input: string) =>
+    pipe(
+        parseCards(input),
+        Effect.map((cards) =>
+            ReadonlyArray.flatMap(cards, (card) => makeCopies(card, cards)),
+        ),
+        Effect.map(ReadonlyArray.length),
+    );
+
+const makeCopies = (
+    card: CardWithPoints,
+    cards: ReadonlyArray<CardWithPoints>,
+): CardWithPoints[] =>
+    pipe(
+        {
+            cardIndex: findCardIndex(card, cards),
+            matchCount: countMatches(card),
+        },
+        ({ cardIndex, matchCount }) =>
+            cards.slice(cardIndex + 1, cardIndex + 1 + matchCount),
+        (matches) =>
+            ReadonlyArray.flatMap(matches, (card) => makeCopies(card, cards)),
+        (recursiveMatches) => [card, ...recursiveMatches],
+    );
+
+const findCardIndex = (card: Card, cards: ReadonlyArray<Card>): number =>
+    cards.findIndex((c) => c.id === card.id);
 
 // ------------------------------------------------
 // Shared
@@ -34,6 +63,9 @@ interface CardWithPoints extends Card {
 
 const CARD_REGEX = /^Card\s+(\d+): (.*) \| (.*)$/;
 
+const parseCards = (input: string) =>
+    pipe(input, inputToLines, ReadonlyArray.map(parseCard), Effect.all);
+
 const parseCard = (line: string) =>
     pipe(
         // Run RegExp to split the line into groups
@@ -42,7 +74,6 @@ const parseCard = (line: string) =>
         Effect.catchTag("NoSuchElementException", () =>
             Effect.fail(new ParseError(`Could not parse Card line: ${line}`)),
         ),
-
 
         // Parse each group
         Effect.flatMap((regExpArray) =>
@@ -124,15 +155,23 @@ const safeParseInt = (input: string) =>
 const addPointTotals = (card: Card): CardWithPoints =>
     pipe(
         // Determine which numbers match
-        card.scratchedNumbers,
-        ReadonlyArray.filter((scratched) =>
-            card.winningNumbers.includes(scratched),
-        ),
+        countMatches(card),
 
         // Find the point value
-        (matches) => matches.length,
         (matchLength) => (matchLength > 0 ? 2 ** (matchLength - 1) : 0),
 
         // Add it to the Card
         (points) => ({ ...card, points }),
+    );
+
+/**
+ * Count how many of the scratched numbers match the winning numbers.
+ */
+const countMatches = (card: Card) =>
+    pipe(
+        card.scratchedNumbers,
+        ReadonlyArray.filter((scratchedNum) =>
+            card.winningNumbers.includes(scratchedNum),
+        ),
+        (matches) => matches.length,
     );
